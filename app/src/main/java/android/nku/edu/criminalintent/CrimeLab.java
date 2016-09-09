@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.nku.edu.criminalintent.database.CrimeBaseHelper;
 import android.nku.edu.criminalintent.database.CrimeCursorWrapper;
 import android.nku.edu.criminalintent.database.CrimeDbSchema.CrimeTable;
+import android.os.Environment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +50,7 @@ public class CrimeLab {
     public void deleteCrime (UUID crimeId) {
         String uuidString = crimeId.toString();
 
-        mDatabase.delete(CrimeTable.NAME, CrimeTable.Cols.UUID + " = ? ", new String[] {uuidString});
+        mDatabase.delete(CrimeTable.NAME, CrimeTable.Cols.UUID + " = ? ", new String[]{uuidString});
     }
 
     public List<Crime> getCrimes() {
@@ -109,5 +111,13 @@ public class CrimeLab {
         );
 
         return new CrimeCursorWrapper(cursor);
+    }
+
+    public File getPhotoFile(Crime crime) {
+        File externalFileDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (externalFileDir == null) {
+            return null;
+        }
+        return new File(externalFileDir, crime.getPhotoFilename());
     }
 }
